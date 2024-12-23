@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Dashboard</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .dashboard-container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            width: 90%;
+            max-width: 800px;
+        }
+        h1 {
+            text-align: center;
+            color: #1c1f26;
+        }
+        .profile-section, .analytics-section {
+            margin-bottom: 20px;
+        }
+        .profile-section h2, .analytics-section h2 {
+            color: #333;
+            margin-bottom: 10px;
+            border-bottom: 2px solid #007bff;
+            display: inline-block;
+            padding-bottom: 5px;
+        }
+        .profile-info, .analytics-info {
+            padding: 10px;
+            background-color: #f9f9f9;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        .profile-info p, .analytics-info p {
+            margin: 10px 0;
+            color: #555;
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard-container">
+        <h1>User Dashboard</h1>
+        <div class="profile-section">
+            <h2>Profile Information</h2>
+            <div class="profile-info">
+                <p><strong>Username:</strong> JohnDoe</p>
+                <p><strong>Email:</strong> johndoe@example.com</p>
+                <p><strong>Joined Date:</strong> January 1, 2021</p>
+            </div>
+        </div>
+        <div class="analytics-section">
+            <h2>Activity Analytics</h2>
+            <div class="analytics-info">
+                <p><strong>Total Logins:</strong> 150</p>
+                <p><strong>Last Login:</strong> December 20, 2024</p>
+                <p><strong>Posts Created:</strong> 45</p>
+                <p><strong>Comments Made:</strong> 120</p>
+            </div>
+        </div>
+        <div class="analytics-section">
+            <h2>Usage Statistics</h2>
+            <div class="analytics-info">
+                <p><strong>Time Spent:</strong> 50 hours</p>
+                <p><strong>Most Active Day:</strong> Wednesdays</p>
+                <p><strong>Preferred Browser:</strong> Chrome</p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

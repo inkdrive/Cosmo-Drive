@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simple Terminal</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #000;
+            color: #00FF00;
+            font-family: monospace;
+            margin: 0;
+        }
+        .terminal-container {
+            background-color: #000;
+            border: 2px solid #00FF00;
+            border-radius: 10px;
+            padding: 20px;
+            width: 80%;
+            max-width: 600px;
+        }
+        .output {
+            height: 300px;
+            overflow-y: auto;
+            margin-bottom: 20px;
+            border: none;
+            outline: none;
+            background: none;
+            color: #00FF00;
+        }
+        .input {
+            width: calc(100% - 22px);
+            padding: 10px;
+            border: 2px solid #00FF00;
+            border-radius: 5px;
+            background-color: #000;
+            color: #00FF00;
+            outline: none;
+            font-family: monospace;
+        }
+        a {
+            color: #00FF00;
+            text-decoration: none;
+            display: block;
+            text-align: center;
+            margin-top: 20px;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="terminal-container">
+        <div class="output" id="output"></div>
+        <input type="text" class="input" id="input" placeholder="Type your command here...">
+        <a href="uc.html">Under Construction</a>
+    </div>
+
+    <script>
+        const input = document.getElementById('input');
+        const output = document.getElementById('output');
+
+        input.addEventListener('keydown', function(event) {
+            if (event.key === 'Enter') {
+                const command = input.value.trim();
+                if (command) {
+                    output.innerHTML += `> ${command}<br>`;
+                    output.scrollTop = output.scrollHeight;
+                    input.value = '';
+                }
+            }
+        });
+    </script>
+</body>
+</html>
