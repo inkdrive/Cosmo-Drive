@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Project Manager</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            display: flex;
+            background-color: #f4f4f9;
+            color: #007bff; /* Blue text color */
+            height: 100vh;
+            overflow: hidden;
+            flex-direction: column;
+        }
+
+        /* Top Panel */
+        .top-panel {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: #007bff; /* Blue */
+            color: white;
+            padding: 25px 25px;
+            width: 100%;
+            z-index: 10;
+        }
+
+        .top-panel .title {
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        .top-panel .nav-buttons {
+            display: flex;
+            gap: 15px;
+        }
+
+        .top-panel .nav-buttons button {
+            background-color: white;
+            color: #007bff;
+            border: 1px solid white;
+            padding: 12px 20px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            font-size: 16px;
+        }
+
+        .top-panel .nav-buttons button:hover {
+            background-color: #333;
+            color: white;
+        }
+
+        /* Divider below the top panel */
+        .divider {
+            height: 2px;
+            background-color: #ddd;
+            width: 100%;
+        }
+
+        /* Left Sidebar (Repository Panel) */
+        .sidebar-left {
+            width: 27.5%;
+            background-color: #f9f9f9; /* Light shade of white */
+            color: #007bff;
+            height: calc(100vh - 105px); /* Adjusted height to fill the viewport */
+            padding: 15px;
+            position: fixed;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            top: 105px;
+            overflow-y: auto; /* Ensure scrolling */
+        }
+
+        .sidebar-left h2 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .sidebar-left ul {
+            list-style: none;
+        }
+
+        .sidebar-left li {
+            padding: 10px;
+            cursor: pointer;
+            background-color: white; /* White background for repositories */
+            margin-bottom: 5px;
+            border-radius: 5px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .sidebar-left li:hover {
+            background-color: #f0f0f0; /* Slightly darker shade for hover effect */
+        }
+
+        .delete-btn {
+            background-color: transparent;
+            border: none;
+            cursor: pointer;
+            color: red;
+        }
+
+        /* Main Content */
+        .main-content {
+            display: flex;
+            flex: 1;
+            margin-left: 27.5%;
+            margin-right: 9%; /* Cover right panel */
+            margin-top: 30px;
+            flex-direction: column;
+        }
+
+        .main-section {
+            flex: 1;
+            padding: 20px;
+            background-color: white;
+            overflow-y: auto; /* Ensure scrolling */
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Project List */
+        .list-container {
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+            margin-top: 20px;
+        }
+
+        .list-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: #f9f9f9;
+            padding: 10px 15px;
+            border-bottom: 1px solid #ddd;
+            font-size: 14px;
+            font-weight: normal;
+            cursor: pointer;
+            margin-bottom: 0;
+        }
+
+        .list-item:hover {
+            background-color: #f0f0f0;
+        }
+
+        .list-item .name {
+            flex: 1;
+            cursor: pointer;
+        }
+
+        .list-item .actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .list-item .actions button {
+            background-color: transparent;
+            color: #007bff;
+            border: none;
+            border-radius: 50%;
+            padding: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background-color 0.3s ease;
+        }
+
+        .list-item .actions button:hover {
+            background-color: #f0f0f0;
+            color: #0056b3;
+        }
+
+        .list-item .actions button i {
+            pointer-events: none;
+        }
+
+        /* Right Sidebar */
+        .sidebar-right {
+            width: 9%;
+            background-color: #f9f9f9; /* Light shade of white */
+            color: #007bff;
+            height: calc(100vh - 105px); /* Adjusted height to fill the viewport */
+            padding: 10px;
+            position: fixed;
+            right: 0;
+            overflow-y: auto; /* Ensure scrolling */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            top: 105px;
+        }
+
+        /* Button for adding new repository */
+        .add-repository-btn {
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            font-size: 24px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-top: 20px;
+        }
+
+        .add-repository-btn:hover {
+            background-color: #218838;
+        }
+
+        /* Button for adding new project */
+        .add-project-btn {
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            font-size: 24px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-top: 20px;
+        }
+
+        .add-project-btn:hover {
+            background-color: #218838;
+        }
+
+        /* Save Button */
+        .save-btn {
+            background-color: #ffc107; /* Yellow */
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            font-size: 24px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-top: 20px;
+        }
+
+        .save-btn:hover {
+            background-color: #e0a800; /* Darker yellow */
+        }
+
+        /* Lock Button */
+        .lock-btn {
+            background-color: transparent;
+            border: none;
+            color: #007bff;
+            cursor: pointer;
+            font-size: 20px;
+        }
+
+        .lock-btn.locked {
+            color: #ff0000;
+        }
+
+        /* Input for renaming project */
+        .rename-input {
+            border: 1px solid #ddd;
+            padding: 5px;
+            font-size: 16px;
+            width: 200px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Top Panel with JavaDrive title and Navigation Buttons -->
+    <div class="top-panel">
+        <div class="title">JavaDrive</div>
+        <div class="nav-buttons">
+            <button onclick="addRepository()">New Repository</button>
+            <button onclick="location.href='terminal.html'">Terminal</button>
+            <button onclick="location.href='compiler.html'">Compiler</button>
+            <button onclick="location.href='homepage.html'">Back to Home</button>
+        </div>
+    </div>
+
+    <!-- Divider -->
+    <div class="divider"></div>
+
+    <!-- Left Sidebar (Repository Panel) -->
+    <div class="sidebar-left">
+        <h2>Repository</h2>
+        <ul id="repository-list">
+            <!-- List of repositories will go here -->
+        </ul>
+    </div>
+
+    <!-- Main Content Area -->
+    <div class="main-content">
+        <!-- Main Section (Projects) -->
+        <div class="main-section">
+            <h1 id="projects-title">Projects</h1>
+            <div class="list-container" id="project-list">
+                <!-- List of projects for the selected repository will go here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Right Sidebar -->
+    <div class="sidebar-right">
+        <button class="add-project-btn" onclick="addProject()">
+            <i class="fas fa-plus"></i>
+        </button>
+        <button class="save-btn" onclick="saveChanges()">
+            <i class="fas fa-save"></i>
+        </button>
+    </div>
+
+    <script>
+        let currentRepository = null;
+
+        // Function to add a new repository
+        function addRepository() {
+            const repositoryList = document.getElementById("repository-list");
+            const newRepository = document.createElement("li");
+            const repositoryName = prompt("Enter repository name:");
+
+            if (repositoryName) {
+                newRepository.innerHTML = `
+                    <span onclick="loadProjectsForRepository('${repositoryName}')">${repositoryName}</span>
+                    <button class="delete-btn" onclick="deleteRepository(this)">&times;</button>
+                `;
+
+                // Add rename functionality on double-click
+                newRepository.ondblclick = function() {
+                    const newName = prompt("Rename repository:", repositoryName);
+                    if (newName) {
+                        newRepository.querySelector("span").textContent = newName;
+                        currentRepository = newName;
+                        document.getElementById("projects-title").textContent = `${newName} - Projects`;
+                    }
+                };
+
+                repositoryList.appendChild(newRepository);
+            }
+        }
+
+        // Function to delete a repository
+        function deleteRepository(button) {
+            const listItem = button.closest("li");
+            listItem.remove();
+            currentRepository = null;
+            document.getElementById("projects-title").textContent = "Projects";
+            document.getElementById("project-list").innerHTML = "";
+        }
+
+        // Function to load projects for a selected repository
+        function loadProjectsForRepository(repositoryName) {
+            currentRepository = repositoryName;
+            document.getElementById("projects-title").textContent = `${repositoryName} - Projects`;
+            document.getElementById("project-list").innerHTML = ""; // Clear existing projects
+        }
+
+        // Function to add a new project to the currently open repository
+        function addProject() {
+            if (!currentRepository) {
+                alert("Please select a repository first.");
+                return;
+            }
+
+            const projectList = document.getElementById("project-list");
+            const newProject = document.createElement("div");
+            newProject.classList.add("list-item");
+            newProject.innerHTML = `
+                <div class="name" onclick="renameProject(this)">New Project</div>
+                <div class="actions">
+                    <button onclick="deleteProject(this)"><i class="fas fa-trash"></i></button>
+                    <button onclick="editProject(this)"><i class="fas fa-edit"></i></button>
+                    <button onclick="openProject(this)"><i class="fas fa-external-link-alt"></i></button>
+                    <button onclick="copyProject(this)"><i class="fas fa-copy"></i></button>
+                    <button class="lock-btn" onclick="toggleLock(this)"><i class="fas fa-lock"></i></button>
+                </div>
+            `;
+            projectList.appendChild(newProject);
+        }
+
+        // Function to delete a project
+        function deleteProject(button) {
+            const listItem = button.closest(".list-item");
+            listItem.remove();
+        }
+
+        // Function to rename a project
+        function renameProject(nameDiv) {
+            const currentName = nameDiv.textContent;
+            const input = document.createElement("input");
+            input.type = "text";
+            input.value = currentName;
+            input.classList.add("rename-input");
+
+            input.addEventListener("blur", function() {
+                nameDiv.textContent = input.value;
+            });
+
+            input.addEventListener("keydown", function(event) {
+                if (event.key === "Enter") {
+                    nameDiv.textContent = input.value;
+                    input.blur();
+                }
+            });
+
+            nameDiv.innerHTML = "";
+            nameDiv.appendChild(input);
+            input.focus();
+        }
+
+        // Function to edit a project (rename)
+        function editProject(button) {
+            const nameDiv = button.closest(".list-item").querySelector(".name");
+            renameProject(nameDiv);
+        }
+
+        // Function to open the project in a new page (text editor page)
+        function openProject(button) {
+            const nameDiv = button.closest(".list-item").querySelector(".name");
+            const projectName = nameDiv.textContent;
+            // Redirect to the text editor page, passing the project name as a query parameter
+            window.location.href = `textEditor.html?projectName=${encodeURIComponent(projectName)}`;
+        }
+
+        // Function to copy a project
+        function copyProject(button) {
+            const listItem = button.closest(".list-item");
+            const projectList = document.getElementById("project-list");
+            const newProject = listItem.cloneNode(true);
+            projectList.appendChild(newProject);
+        }
+
+        // Lock/Unlock function for each project
+        function toggleLock(button) {
+            const lockBtn = button;
+            const icon = lockBtn.querySelector('i');
+            const listItem = button.closest('.list-item');
+
+            if (lockBtn.classList.contains('locked')) {
+                lockBtn.classList.remove('locked');
+                icon.classList.remove('fa-lock');
+                icon.classList.add('fa-lock-open');
+            } else {
+                lockBtn.classList.add('locked');
+                icon.classList.remove('fa-lock-open');
+                icon.classList.add('fa-lock');
+            }
+        }
+
+        // Function to save changes (placeholder for actual save functionality)
+        function saveChanges() {
+            alert('Changes saved!');
+        }
+    </script>
+</body>
+</html>

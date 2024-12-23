@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile Page</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f4f4f9;
+            margin: 0;
+        }
+
+        .profile-container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            width: 400px;
+            text-align: center;
+            transition: transform 0.3s;
+        }
+
+        .profile-container:hover {
+            transform: translateY(-5px);
+        }
+
+        .profile-container h2 {
+            margin-bottom: 10px;
+            color: #333;
+            position: relative;
+        }
+
+        .profile-container h2::after {
+            content: '';
+            width: 50px;
+            height: 2px;
+            background-color: #007bff;
+            position: absolute;
+            bottom: -5px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .profile-container textarea {
+            width: 100%;
+            padding: 10px;
+            margin-top: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            resize: vertical;
+            height: 100px;
+        }
+
+        .edit-profile-btn, .back-btn {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+            border-radius: 5px;
+            font-size: 16px;
+            transition: background-color 0.3s ease, transform 0.3s;
+            margin-top: 10px;
+        }
+
+        .edit-profile-btn:hover, .back-btn:hover {
+            background-color: #0056b3;
+            transform: translateY(-3px);
+        }
+
+        .edit-profile-btn:focus, .back-btn:focus {
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.25);
+        }
+    </style>
+</head>
+<body>
+    <div class="profile-container">
+        <h2 id="username">Username</h2>
+        <textarea placeholder="Write your description here..."></textarea>
+        <button class="edit-profile-btn">Save Changes</button>
+        <button class="back-btn" onclick="location.href='homepage.html'">Back to Projects</button>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            fetch('profiles.json')
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('username').textContent = data.username;
+                })
+                .catch(error => {
+                    console.error('Error fetching profile:', error);
+                    document.getElementById('username').textContent = 'No profile found.';
+                });
+        });
+    </script>
+</body>
+</html>

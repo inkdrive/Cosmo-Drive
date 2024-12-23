@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome to Project Manager</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #eef2f3;
+            color: #333;
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+            margin: 0;
+        }
+        .welcome-container {
+            text-align: center;
+            background-color: #ffffff;
+            padding: 50px;
+            border-radius: 15px;
+            box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
+            width: 80%;
+            max-width: 600px;
+        }
+        h1 {
+            font-size: 38px;
+            color: #1c1f26;
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+        p {
+            font-size: 20px;
+            color: #555;
+            margin-bottom: 40px;
+        }
+        .button-container, .action-container {
+            display: flex;
+            justify-content: space-between;
+            gap: 20px;
+        }
+        .btn {
+            flex: 1;
+            background-color: #007bff;
+            color: white;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            text-decoration: none;
+            font-size: 20px;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+        }
+        .btn:hover {
+            background-color: #0056b3;
+            transform: translateY(-3px);
+        }
+        .admin-btn {
+            background-color: #28a745;
+        }
+        .admin-btn:hover {
+            background-color: #218838;
+        }
+        .guest-btn {
+            background-color: #dc3545;
+        }
+        .guest-btn:hover {
+            background-color: #c82333;
+        }
+        .signup-btn {
+            background-color: #6c757d;
+        }
+        .signup-btn:hover {
+            background-color: #5a6268;
+        }
+        .login-btn {
+            background-color: #17a2b8;
+        }
+        .login-btn:hover {
+            background-color: #138496;
+        }
+    </style>
+</head>
+<body>
+    <div class="welcome-container">
+        <h1>Welcome to Project Manager</h1>
+        <p>Choose how you want to proceed:</p>
+        <!-- Admin and Guest Buttons -->
+        <div class="button-container">
+            <a href="uc.html" class="btn admin-btn">Admin</a>
+            <a href="uc.html" class="btn guest-btn">Guest</a>
+        </div>
+        <!-- Sign Up and Login Buttons -->
+        <div class="action-container">
+            <a href="sign-up.html" class="btn signup-btn">Sign Up</a>
+            <a href="uc.html" class="btn login-btn">Login</a>
+        </div>
+    </div>
+</body>
+</html>

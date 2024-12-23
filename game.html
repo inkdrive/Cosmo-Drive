@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>2D Shooting Game</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            font-family: Arial, sans-serif;
+        }
+        canvas {
+            display: block;
+            background-color: #a8d5e2;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="gameCanvas"></canvas>
+    <script>
+        // Canvas Setup
+        const canvas = document.getElementById("gameCanvas");
+        const ctx = canvas.getContext("2d");
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        // Game Constants
+        const PLAYER_SPEED = 3;
+        const SPRINT_SPEED = 6;
+        const PLAYER_SIZE = 20;
+        const RELOAD_TIMES = { e: 1000, r: 3000, t: 10000 };
+        const PROJECTILES = [];
+        const MONSTERS = [];
+        const PLAYER_MAX_HP = 40;
+        let spawnCounter = 0;
+        let boss = null;
+
+        // Player Object
+        const player = {
+            x: canvas.width / 2,
+            y: canvas.height / 2,
+            width: PLAYER_SIZE,
+            height: PLAYER_SIZE,
+            speed: PLAYER_SPEED,
+            hp: PLAYER_MAX_HP,
+            direction: { x: 0, y: 0 },
+            lastShot: { e: 0, r: 0, t: 0 },
+        };
+
+        // Key Handling
+        const keys = {};
+        window.addEventListener("keydown", (e) => (keys[e.key] = true));
+        window.addEventListener("keyup", (e) => (keys[e.key] = false));
+
+        // Monster Spawning
+        function spawnMonsters() {
+            // Spawn regular monsters only if the boss is not active
+            if (boss) return;
+
+            // Zombies (spawn in groups of 5 every 7 seconds)
+            if (spawnCounter % 420 === 0) {
+                for (let i = 0; i < 5; i++) {
+                    MONSTERS.push(createMonster("zombie"));
+                }
+            }
+            // Knights (spawn in groups of 3 every 12 seconds)
+            if (spawnCounter % 720 === 0) {
+                for (let i = 0; i < 3; i++) {
+                    MONSTERS.push(createMonster("knight"));
+                }
+            }
+        }
+
+        function createMonster(type) {
+            const x = Math.random() * canvas.width;
+            const y = Math.random() * canvas.height;
+            let hp, speed, color;
+
+            if (type === "zombie") {
+                hp = 5;
+                speed = 1.5;
+                color = "green";
+            } else if (type === "knight") {
+                hp = 25;
+                speed = 1;
+                color = "darkred";
+            }
+
+            return { x, y, hp, speed, type, color, size: 20 };
+        }
+
+        // Boss Spawning
+        function spawnBoss() {
+            if (!boss) {
+                boss = {
+                    x: canvas.width / 2,
+                    y: canvas.height / 2,
+                    hp: 200,
+                    size: 50,
+                    color: "black",
+                    lastAttack: 0,
+                    fireballCooldown: 2000,
+                    meleeCooldown: 1000,
+                };
+                MONSTERS.length = 0; // Remove all other monsters
+            }
+        }
+
+        function bossAttack(timestamp) {
+            if (!boss) return;
+
+            // Fireball Attack
+            if (timestamp - boss.lastAttack > boss.fireballCooldown) {
+                PROJECTILES.push({
+                    x: boss.x + boss.size / 2,
+                    y: boss.y + boss.size / 2,
+                    vx: (player.x - boss.x) / 20,
+                    vy: (player.y - boss.y) / 20,
+                    size: 10,
+                    damage: 10,
+                    type: "fireball",
+                    color: "orange",
+                });
+                boss.lastAttack = timestamp;
+            }
+
+            // Summon Minions (every 10 seconds)
+            if (spawnCounter % 600 === 0) {
+                for (let i = 0; i < 3; i++) {
+                    MONSTERS.push(createMonster("zombie"));
+                }
+            }
+        }
+
+        // Game Loop
+        function gameLoop(timestamp) {
+            update(timestamp);
+            draw();
+            requestAnimationFrame(gameLoop);
+        }
+
+        // Update Game State
+        function update(timestamp) {
+            spawnCounter++;
+
+            // Spawn Boss after 100 seconds
+            if (spawnCounter === 6000) spawnBoss();
+
+            // Boss-specific behavior
+            if (boss) {
+                bossAttack(timestamp);
+            } else {
+                spawnMonsters();
+            }
+
+            // Player Movement
+            player.direction.x = 0;
+            player.direction.y = 0;
+            if (keys["ArrowUp"]) player.direction.y = -1;
+            if (keys["ArrowDown"]) player.direction.y = 1;
+            if (keys["ArrowLeft"]) player.direction.x = -1;
+            if (keys["ArrowRight"]) player.direction.x = 1;
+
+            const speed = keys["w"] ? SPRINT_SPEED : PLAYER_SPEED;
+            player.x += player.direction.x * speed;
+            player.y += player.direction.y * speed;
+
+            // Fire Projectiles
+            if (keys["e"] && timestamp - player.lastShot.e > RELOAD_TIMES.e) {
+                fireProjectile(5, "single", "#ff0000");
+                player.lastShot.e = timestamp;
+            }
+            if (keys["r"] && timestamp - player.lastShot.r > RELOAD_TIMES.r) {
+                fireProjectile(10, "slow", "#00ff00");
+                player.lastShot.r = timestamp;
+            }
+            if (keys["t"] && timestamp - player.lastShot.t > RELOAD_TIMES.t) {
+                fireProjectile(50, "explosion", "#ff9900");
+                player.lastShot.t = timestamp;
+            }
+
+            // Update Projectiles
+            PROJECTILES.forEach((proj, index) => {
+                proj.x += proj.vx;
+                proj.y += proj.vy;
+
+                // Check collision with monsters
+                MONSTERS.forEach((monster, mIndex) => {
+                    if (
+                        proj.x > monster.x &&
+                        proj.x < monster.x + monster.size &&
+                        proj.y > monster.y &&
+                        proj.y < monster.y + monster.size
+                    ) {
+                        monster.hp -= proj.damage;
+                        PROJECTILES.splice(index, 1);
+                    }
+                });
+
+                // Check collision with boss
+                if (boss && proj.x > boss.x && proj.x < boss.x + boss.size && proj.y > boss.y && proj.y < boss.y + boss.size) {
+                    boss.hp -= proj.damage;
+                    PROJECTILES.splice(index, 1);
+                }
+
+                // Remove projectiles that leave the screen
+                if (
+                    proj.x < 0 ||
+                    proj.x > canvas.width ||
+                    proj.y < 0 ||
+                    proj.y > canvas.height
+                ) {
+                    PROJECTILES.splice(index, 1);
+                }
+            });
+
+            // Remove dead monsters
+            for (let i = MONSTERS.length - 1; i >= 0; i--) {
+                if (MONSTERS[i].hp <= 0) {
+                    MONSTERS.splice(i, 1);
+                }
+            }
+
+            // Remove boss if defeated
+            if (boss && boss.hp <= 0) {
+                boss = null;
+                alert("Boss Defeated! You Win!");
+                location.reload(); // Restart game
+            }
+        }
+
+        // Draw Everything
+        function draw() {
+            // Clear Canvas
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            // Draw Player
+            ctx.fillStyle = "#0000ff";
+            ctx.fillRect(player.x, player.y, player.width, player.height);
+
+            // Draw Monsters
+            MONSTERS.forEach((monster) => {
+                ctx.fillStyle = monster.color;
+                ctx.fillRect(monster.x, monster.y, monster.size, monster.size);
+            });
+
+            // Draw Boss
+            if (boss) {
+                ctx.fillStyle = boss.color;
+                ctx.fillRect(boss.x, boss.y, boss.size, boss.size);
+
+                // Draw Boss HP Bar
+                ctx.fillStyle = "red";
+                ctx.fillRect(boss.x, boss.y - 10, (boss.hp / 200) * boss.size, 5);
+            }
+
+            // Draw Projectiles
+            PROJECTILES.forEach((proj) => {
+                ctx.fillStyle = proj.color;
+                ctx.beginPath();
+                ctx.arc(proj.x, proj.y, proj.size, 0, Math.PI * 2);
+                ctx.fill();
+            });
+        }
+
+        // Fire Projectile
+        function fireProjectile(damage, type, color) {
+            const angle = Math.atan2(player.direction.y, player.direction.x);
+            const speed = 10;
+            PROJECTILES.push({
+                x: player.x + player.width / 2,
+                y: player.y + player.height / 2,
+                vx: Math.cos(angle) * speed,
+                vy: Math.sin(angle) * speed,
+                size: 5,
+                damage,
+                type,
+                color,
+            });
+        }
+
+        // Start Game Loop
+        requestAnimationFrame(gameLoop);
+    </script>
+</body>
+</html>
