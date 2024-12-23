@@ -72,17 +72,5 @@
         </div>
     </div>
 
-    <script>
-        function saveToLocalStorage() {
-            const username = document.getElementById('username').value;
-            const password = document.getElementById('password').value;
-
-            const profiles = JSON.parse(localStorage.getItem('profiles')) || [];
-            profiles.push({ username, password });
-            localStorage.setItem('profiles', JSON.stringify(profiles));
-
-            document.getElementById('signupForm').submit(); // Submit the form
-        }
-    </script>
 </body>
 </html>
