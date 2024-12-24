@@ -68,6 +68,7 @@
             flex-grow: 1;
             box-sizing: border-box;
             margin: 20px; /* Margin around main content */
+            justify-content: center; /* Center the content */
         }
 
         .left-panel {
@@ -97,16 +98,13 @@
             box-sizing: border-box;
         }
 
-        .right-panel {
-            background-color: #E0E0E0; /* Light gray */
-            color: #333333;
-            padding: 20px;
-            width: 250px;
-            display: flex;
-            flex-direction: column;
+        .card-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
             gap: 20px;
-            box-sizing: border-box;
-            margin-left: 20px; /* Margin to the left */
+            width: 100%;
+            max-width: 1000px; /* Limit the maximum width */
+            padding: 20px;
         }
 
         .card {
@@ -282,6 +280,20 @@
                 <a href="sharedwithme.html">Shared with Me</a>
             </div>
 
+            <div class="card-container">
+                <a href="profile.html" class="card red"><i class="fas fa-user"></i> Profile</a>
+                <a href="repository.html" class="card blue"><i class="fas fa-database"></i> Repository</a>
+                <a href="dashboard.html" class="card green"><i class="fas fa-chart-line"></i> Dashboard</a>
+                <a href="compilers.html" class="card yellow"><i class="fas fa-code"></i> Compilers</a>
+                               <a href="terminal.html" class="card red"><i class="fas fa-terminal"></i> Terminal</a>
+                <a href="community.html" class="card blue"><i class="fas fa-users"></i> Community</a>
+                <a href="game.html" class="card green"><i class="fas fa-gamepad"></i> Game</a>
+                <a href="achievements.html" class="card yellow"><i class="fas fa-trophy"></i> Achievements</a>
+                <a href="recent-activities.html" class="card red"><i class="fas fa-history"></i> Recent Activities</a>
+                <a href="about.html" class="card blue"><i class="fas fa-info-circle"></i> About</a>
+                <a href="versioncontrol.html" class="card green"><i class="fas fa-code-branch"></i> Version Control</a>
+            </div>
+
             <section class="recent-activities">
                 <h3>Recent Activities</h3>
                 <ul>
@@ -290,19 +302,6 @@
                     <li>Project.zip was downloaded - 1 day ago</li>
                 </ul>
             </section>
-        </div>
-        <div class="right-panel">
-            <a href="profile.html" class="card red"><i class="fas fa-user"></i> Profile</a>
-            <a href="repository.html" class="card blue"><i class="fas fa-database"></i> Repository</a>
-            <a href="dashboard.html" class="card green"><i class="fas fa-chart-line"></i> Dashboard</a>
-            <a href="compilers.html" class="card yellow"><i class="fas fa-code"></i> Compilers</a>
-            <a href="terminal.html" class="card red"><i class="fas fa-terminal"></i> Terminal</a>
-            <a href="community.html" class="card blue"><i class="fas fa-users"></i> Community</a>
-            <a href="game.html" class="card green"><i class="fas fa-gamepad"></i> Game</a>
-            <a href="achievements.html" class="card yellow"><i class="fas fa-trophy"></i> Achievements</a>
-            <a href="recent-activities.html" class="card red"><i class="fas fa-history"></i> Recent Activities</a>
-            <a href="about.html" class="card blue"><i class="fas fa-info-circle"></i> About</a>
-            <a href="versioncontrol.html" class="card green"><i class="fas fa-code-branch"></i> Version Control</a>
         </div>
     </div>
 
